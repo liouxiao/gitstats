@@ -51,8 +51,10 @@ public class AsyncTask {
 	@Autowired
 	PushEventRecordRepository pushEventRecordRepository;
 
-	@Autowired
+	// FIXME: 启动报错，暂时注释掉！
+	// @Autowired
 	private MergeRequestEventRecordRepository mergeRequestEventRecordRepository;
+
 	@Autowired
 	private StatsCommitAsyncTask statsCommitAsyncTask;
 
