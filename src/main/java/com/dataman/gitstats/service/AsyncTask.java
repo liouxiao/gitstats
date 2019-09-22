@@ -150,7 +150,7 @@ public class AsyncTask {
 							initProjectStats2(projectBranchStats,cdl);
 						} catch (Exception e) {
 							logger.error("初始化出错：",e);
-							GroupStats groupStats2=groupStatsRepository.findOne(groupStats.getId());
+							GroupStats groupStats2=groupStatsRepository.findById(groupStats.getId()).get();
 							groupStats2.setStatus(-1);
 							groupStats2.setLastupdate(new Date());
 							groupStatsRepository.save(groupStats2);
@@ -160,7 +160,7 @@ public class AsyncTask {
 				});
 			}
 			cdl.await();
-			GroupStats groupStats2=groupStatsRepository.findOne(groupStats.getId());
+			GroupStats groupStats2=groupStatsRepository.findById(groupStats.getId()).get();
 			groupStats2.setStatus(1);
 			groupStats2.setLastupdate(new Date());
 			groupStatsRepository.save(groupStats2);
@@ -168,7 +168,7 @@ public class AsyncTask {
 			logger.info(groupStats2.getName()+"初始化完成，耗时"+(end-begin)+"ms");
 		}catch (Exception e){
 			logger.error("初始化出错：",e);
-			GroupStats groupStats2=groupStatsRepository.findOne(groupStats.getId());
+			GroupStats groupStats2=groupStatsRepository.findById(groupStats.getId()).get();
 			groupStats2.setStatus(-1);
 			groupStats2.setLastupdate(new Date());
 			groupStatsRepository.save(groupStats2);
@@ -332,13 +332,13 @@ public class AsyncTask {
 	 * @return 
 	 */
 	private synchronized void updateGroup(ProjectBranchStats pbs) throws InterruptedException {
-		ProjectStats projectStats=projectRepository.findOne(pbs.getProjectId());
+		ProjectStats projectStats=projectRepository.findById(pbs.getProjectId()).get();
 		projectStats.setTotalAddRow(projectStats.getTotalAddRow()+pbs.getTotalAddRow());
 		projectStats.setTotalDelRow(projectStats.getTotalDelRow()+pbs.getTotalDelRow());
 		projectStats.setTotalRow(projectStats.getTotalRow()+pbs.getTotalRow());
 		projectStats.setTotalCommits(projectStats.getTotalCommits()+pbs.getTotalCommits());
 		projectRepository.save(projectStats);
-		GroupStats groupStats=groupStatsRepository.findOne(pbs.getGroupId());
+		GroupStats groupStats=groupStatsRepository.findById(pbs.getGroupId()).get();
 		groupStats.setTotalAddRow(groupStats.getTotalAddRow()+pbs.getTotalAddRow());
 		groupStats.setTotalDelRow(groupStats.getTotalDelRow()+pbs.getTotalDelRow());
 		groupStats.setTotalRow(groupStats.getTotalRow()+pbs.getTotalRow());
@@ -357,13 +357,13 @@ public class AsyncTask {
 	 * @param size @return
 	 */
 	private synchronized void updateGroupForEvents(ProjectBranchStats pbs, int totalAdd, int totalDel, int totalCommits) throws InterruptedException {
-		ProjectStats projectStats=projectRepository.findOne(pbs.getProjectId());
+		ProjectStats projectStats=projectRepository.findById(pbs.getProjectId()).get();
 		projectStats.setTotalAddRow(projectStats.getTotalAddRow()+totalAdd);
 		projectStats.setTotalDelRow(projectStats.getTotalDelRow()+totalDel);
 		projectStats.setTotalRow(projectStats.getTotalRow()+totalAdd-totalDel);
 		projectStats.setTotalCommits(projectStats.getTotalCommits()+totalCommits);
 		projectRepository.save(projectStats);
-		GroupStats groupStats=groupStatsRepository.findOne(pbs.getGroupId());
+		GroupStats groupStats=groupStatsRepository.findById(pbs.getGroupId()).get();
 		groupStats.setTotalAddRow(groupStats.getTotalAddRow()+totalAdd);
 		groupStats.setTotalDelRow(groupStats.getTotalDelRow()+totalDel);
 		groupStats.setTotalRow(groupStats.getTotalRow()+totalAdd-totalDel);
@@ -466,7 +466,7 @@ public class AsyncTask {
 		GitLabApi gitLabApi=gitlabUtil.getGitLabApi(projectBranchStats.getAccountid());
 			while (projectBranchStats.getStatus()==0){
 				Thread.sleep(1000);
-				projectBranchStats=projectBranchStatsRepository.findOne(projectBranchStats.getId());
+				projectBranchStats=projectBranchStatsRepository.findById(projectBranchStats.getId()).get();
 			}
 		projectBranchStats.setStatus(0);
 		projectBranchStatsRepository.save(projectBranchStats);
@@ -506,7 +506,7 @@ public class AsyncTask {
 		GitLabApi gitLabApi=gitlabUtil.getGitLabApi(projectBranchStats.getAccountid());
 		while (projectBranchStats.getStatus()==0){
 			Thread.sleep(1000);
-			projectBranchStats=projectBranchStatsRepository.findOne(projectBranchStats.getId());
+			projectBranchStats=projectBranchStatsRepository.findById(projectBranchStats.getId()).get();
 		}
 		projectBranchStats.setStatus(0);
 		projectBranchStatsRepository.save(projectBranchStats);
@@ -514,7 +514,7 @@ public class AsyncTask {
 		int totalAdd=0;
 		int totalDel=0;
 		for(Commit eventCommit:eventCommitList){
-			commitStats=commitStatsRepository.findOne(eventCommit.getId());
+			commitStats=commitStatsRepository.findById(eventCommit.getId()).get();
 			Commit commit=gitLabApi.getCommitsApi().getCommit(projectBranchStats.getProid(),eventCommit.getId());
 			commitStats=new CommitStatsPo();
 			ClassUitl.copyPropertiesExclude(commit, commitStats, new String[]{"parentIds","stats"});

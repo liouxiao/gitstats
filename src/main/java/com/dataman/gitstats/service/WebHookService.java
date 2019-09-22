@@ -102,7 +102,7 @@ public class WebHookService {
     }
 
     public void handlePushEvent(PushEvent event) throws Exception {
-        if (recordRepository.findOne(event.getBefore() + event.getAfter()) == null) {
+        if (! recordRepository.findById(event.getBefore() + event.getAfter()).isPresent()) {
             PushEventRecord record = this.addPushEventRecord(event);
                 ProjectBranchStats branchStats = projectBranchService.findProjectBranchStatsByParams(event.getProject().getWebUrl(),event.getBranch());
                 if (branchStats != null) {
@@ -116,7 +116,7 @@ public class WebHookService {
     }
 
     public void handleMergeRequestEvent(MergeRequestEvent event) throws Exception {
-        if (mergeRequestEventRecordRepository.findOne(event.getObjectAttributes().getUrl()) == null) {
+        if (! mergeRequestEventRecordRepository.findById(event.getObjectAttributes().getUrl()).isPresent()) {
 
             MergeRequestEventRecord record = this.addMergeRequestEventRecord(event);
 //            ProjectStats projectStats = projectBranchService.findProjectStatsByIdAndUrl(event.getObjectAttributes().getProjectId(), event.getObjectAttributes().getUrl());

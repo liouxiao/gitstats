@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.gitlab4j.api.GitLabApi;
@@ -122,10 +123,10 @@ public class GroupService {
 
 			}
 		}
-		GroupStats groupStats = groupStatsRepository.findOne(group.getWebUrl() + "_" + param.getGroupId());
-		if (groupStats == null) {
+		Optional<GroupStats> optg = groupStatsRepository.findById(group.getWebUrl() + "_" + param.getGroupId());
+		if (!optg.isPresent()) {
 			try {
-				groupStats = new GroupStats();
+				GroupStats groupStats = new GroupStats();
 				ClassUitl.copyProperties(param, groupStats);
 				if (groupStats.getViewName() == null) {
 					groupStats.setViewName(group.getName());
@@ -231,7 +232,7 @@ public class GroupService {
 	}
 
 	public ProjectBranchStats findProjectBranchStatsById(String id) {
-		return projectBranchStatsRepository.findOne(id);
+		return projectBranchStatsRepository.findById(id).get();
 	}
 
 	public List<GroupStats> getAllGroupStats(String limit) {
@@ -259,7 +260,7 @@ public class GroupService {
 	 * @return void
 	 */
 	public void resetGroupStats(String id, String webHookUrl) throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(id);
+		GroupStats groupStats = groupStatsRepository.findById(id).get();
 		try {
 			projectRepository.deleteByGroupId(id);
 			projectBranchStatsRepository.deleteByGroupId(id);
@@ -291,7 +292,7 @@ public class GroupService {
 	}
 
 	public void modifyGroupStats(AddGroupParam param, String webHookUrl) throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(param.getId());
+		GroupStats groupStats = groupStatsRepository.findById(param.getId()).get();
 		if (param.getId() == null || groupStats == null) {
 			throw new Exception("参数错误");
 		}
@@ -329,7 +330,7 @@ public class GroupService {
 	 * @date 2017年10月11日 下午4:53:27
 	 */
 	public GroupStatsVo showStatsByUser(String groupId, MatchOperation match) throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(groupId);
+		GroupStats groupStats = groupStatsRepository.findById(groupId).get();
 		GroupStatsVo groupStatsVo = ClassUitl.copyProperties(groupStats, new GroupStatsVo());
 		groupStatsVo.setData(statsByUser(groupStats, match));
 		return groupStatsVo;
@@ -342,7 +343,7 @@ public class GroupService {
 	 * @date 2017年10月11日 下午4:53:57
 	 */
 	public GroupStatsVo showStatsByDay(String groupId, String format, MatchOperation match) throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(groupId);
+		GroupStats groupStats = groupStatsRepository.findById(groupId).get();
 		GroupStatsVo pbsv = ClassUitl.copyProperties(groupStats, new GroupStatsVo());
 		pbsv.setData(statsByDay(groupStats, format, match));
 		return pbsv;
@@ -356,7 +357,7 @@ public class GroupService {
 	 */
 	public GroupStatsPlusVo showStatsByUserAndDay(String groupId, String format, MatchOperation match)
 			throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(groupId);
+		GroupStats groupStats = groupStatsRepository.findById(groupId).get();
 		GroupStatsPlusVo groupStatsPlusVo = ClassUitl.copyProperties(groupStats, new GroupStatsPlusVo());
 		groupStatsPlusVo.setData(statsByUserByDay(groupStats, format, match));
 		return groupStatsPlusVo;
@@ -370,7 +371,7 @@ public class GroupService {
 	 */
 	public GroupStatsPlusVo showStatsByDayAndUser(String groupId, String format, MatchOperation match)
 			throws Exception {
-		GroupStats groupStats = groupStatsRepository.findOne(groupId);
+		GroupStats groupStats = groupStatsRepository.findById(groupId).get();
 		GroupStatsPlusVo groupStatsPlusVo = ClassUitl.copyProperties(groupStats, new GroupStatsPlusVo());
 		groupStatsPlusVo.setData(statsByDayByUser(groupStats, format, match));
 		return groupStatsPlusVo;

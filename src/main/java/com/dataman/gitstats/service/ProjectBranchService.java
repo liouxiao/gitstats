@@ -87,7 +87,7 @@ public class ProjectBranchService {
 		if(branch==null){
 			return NOTEXIST;
 		}
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(project.getWebUrl()+"_"+param.getProid()+"_"+param.getBranch());
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(project.getWebUrl()+"_"+param.getProid()+"_"+param.getBranch()).get();
 		if(pbs==null){
 			try{
 				pbs=new ProjectBranchStats();
@@ -129,7 +129,7 @@ public class ProjectBranchService {
 	}
 	
 	public ProjectBranchStats findProjectBranchStatsById(String id){
-		return projectBranchStatsRepository.findOne(id);
+		return projectBranchStatsRepository.findById(id).get();
 	}
 
 	public ProjectBranchStats findProjectBranchStatsByParams(String weburl,String branch){
@@ -159,7 +159,7 @@ public class ProjectBranchService {
 	 * @return void
 	 */
 	public void resetProjectBranchStats(String id,String webHookUrl) throws Exception {
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(id);
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(id).get();
 		try{
 			commitStatsRepository.deleteByBranchId(id);//删除已同步的commit
 			pbs.setStatus(0);
@@ -186,7 +186,7 @@ public class ProjectBranchService {
 	}
 
 	public void modifyProjectBranchStats(AddProjectParam param,String webHookUrl) throws Exception{
-		ProjectBranchStats projectBranchStats=projectBranchStatsRepository.findOne(param.getId());
+		ProjectBranchStats projectBranchStats=projectBranchStatsRepository.findById(param.getId()).get();
 		if(param.getId()==null || projectBranchStats==null){
 			throw new Exception("参数错误");
 		}
@@ -219,7 +219,7 @@ public class ProjectBranchService {
 	 * @date 2017年10月11日 下午4:53:27
 	 */
 	public ProjectBranchStatsVo showStatsByUser(String pbsId) throws Exception{
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(pbsId);
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(pbsId).get();
 		ProjectBranchStatsVo pbsv=ClassUitl.copyProperties(pbs, new ProjectBranchStatsVo());
 		pbsv.setData(statsByUser(pbs));
 		return pbsv;
@@ -231,7 +231,7 @@ public class ProjectBranchService {
 	 * @date 2017年10月11日 下午4:53:57
 	 */
 	public ProjectBranchStatsVo showStatsByDay(String pbsId,String format,MatchOperation match) throws Exception{
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(pbsId);
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(pbsId).get();
 		ProjectBranchStatsVo pbsv=ClassUitl.copyProperties(pbs, new ProjectBranchStatsVo());
 		pbsv.setData(statsByDay(pbs,format,match));
 		return pbsv;
@@ -243,7 +243,7 @@ public class ProjectBranchService {
 	 * @date 2017年10月11日 下午4:54:28
 	 */
 	public ProjectBranchStatsPlusVo showStatsByUserAndDay(String pbsId,String format,MatchOperation match) throws Exception{
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(pbsId);
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(pbsId).get();
 		ProjectBranchStatsPlusVo pbspv=ClassUitl.copyProperties(pbs, new ProjectBranchStatsPlusVo());
 		pbspv.setData(statsByUserByDay(pbs,format,match));
 		return pbspv;
@@ -256,7 +256,7 @@ public class ProjectBranchService {
 	 * @date 2017年10月11日 下午4:54:28
 	 */
 	public ProjectBranchStatsPlusVo showStatsByDayAndUser(String pbsId,String format,MatchOperation match) throws Exception{
-		ProjectBranchStats pbs=projectBranchStatsRepository.findOne(pbsId);
+		ProjectBranchStats pbs=projectBranchStatsRepository.findById(pbsId).get();
 		ProjectBranchStatsPlusVo pbspv=ClassUitl.copyProperties(pbs, new ProjectBranchStatsPlusVo());
 		pbspv.setData(statsByDayByUser(pbs,format,match));
 		return pbspv;

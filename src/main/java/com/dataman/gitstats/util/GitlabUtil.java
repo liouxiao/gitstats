@@ -26,7 +26,7 @@ public class GitlabUtil {
 		if(map.containsKey(id)){
 			return map.get(id);
 		}
-		GitlabAccount ga= gitlabAccountRepository.findOne(id);
+		GitlabAccount ga= gitlabAccountRepository.findById(id).get();
 		GitLabApi gitLabApi = login(ga);
 		map.put(id, gitLabApi);
 		return gitLabApi;

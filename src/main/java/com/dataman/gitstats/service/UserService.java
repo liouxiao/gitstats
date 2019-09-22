@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import sun.security.provider.MD5;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.List;
 
 /**
@@ -51,10 +52,11 @@ public class UserService {
         if(user.getId()==null){
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
-        User oldUser=userRepository.findOne(user.getId());
-        if(oldUser==null){
+		Optional<User> optu = userRepository.findById(user.getId());
+		if (!optg.isPresent()) {
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
+		User oldUser=optu.get();
         if(user.getStatus()!=0){
             oldUser.setStatus(user.getStatus());
         }
@@ -76,10 +78,12 @@ public class UserService {
      */
     public User updatePassword(String userId,String oldPassword,String newPassword) throws Exception{
 
-        User oldUser=userRepository.findOne(userId);
+		Optional<User> optu = userRepository.findById(userId);
+		if (!optg.isPresent()) {
         if(oldUser==null){
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
+		User oldUser=optu.get();
         if(!MD5Util.MD5(oldPassword).equals(oldUser.getPassword())){
             throw new BusinessException(ApiResultCode.ERR_OLD_PASSWORD);
         }

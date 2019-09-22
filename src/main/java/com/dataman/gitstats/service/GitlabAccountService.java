@@ -54,7 +54,7 @@ public class GitlabAccountService {
 			account.setId(Commnt.createUUID());
 			account.setCratedate(cal.getTime());
 		}else{
-			account=gitlabAccountRepository.findOne(param.getId());
+			account=gitlabAccountRepository.findById(param.getId()).get();
 		}
 			account.setLastupdate(cal.getTime());
 			account.setUrl(param.getUrl());
