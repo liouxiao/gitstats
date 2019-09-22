@@ -67,7 +67,7 @@ mongo
 
 有某人（同一邮箱）用了不同的AuthorName，则会被当作不同的开发者，需要在后台mongodb里修正。
 
-假设其email为`somebody@gmail.com`，期望其用户名同一为`Somebody`，则执行：
+假设其email为`somebody@gmail.com`，期望其用户名统一为`Somebody`，则执行：
 
 ```
 db.commitStatsPo.updateMany(
