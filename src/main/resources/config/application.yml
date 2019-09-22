@@ -21,9 +21,9 @@ server:
 
 logging:
   config: classpath:config/logback.xml
-  level: INFO
   path: ../logs
-
+  level:
+    root: INFO
 
 swagger:
   enabled: true
@@ -40,7 +40,7 @@ gitlab:
 spring:
   data:
     mongodb:
-        uri: mongodb://192.168.145.131:27017/gitstats
+        uri: mongodb://localhost:27017/gitstats
   devtools:
     restart:
       additional-paths: src\main\resources\static
