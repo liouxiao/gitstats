@@ -81,3 +81,19 @@ db.commitStatsPo.updateMany(
 )
 
 ```
+
+
+## 访问自签名HTTPS证书的Gitlab
+
+用Firefox访问gitlab网站，下载HTTPS的证书，保存在本地（假设为`gitlab.crt`）。
+
+用JDK工具导入证书到JDK的根证书库。
+
+```
+cd $JAVA_HOME/lib/security
+
+sudo keytool -import -alias gitlab -keystore ./cacerts -file ~/Downloads/gitlab.crt
+```
+
+JDK根证书库的默认密码是`changeit`。
+
