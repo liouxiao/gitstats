@@ -53,7 +53,7 @@ public class UserService {
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
 		Optional<User> optu = userRepository.findById(user.getId());
-		if (!optg.isPresent()) {
+		if (!optu.isPresent()) {
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
 		User oldUser=optu.get();
@@ -79,8 +79,7 @@ public class UserService {
     public User updatePassword(String userId,String oldPassword,String newPassword) throws Exception{
 
 		Optional<User> optu = userRepository.findById(userId);
-		if (!optg.isPresent()) {
-        if(oldUser==null){
+		if (!optu.isPresent()) {
             throw new BusinessException(ApiResultCode.ERR_PARAMETER);
         }
 		User oldUser=optu.get();
