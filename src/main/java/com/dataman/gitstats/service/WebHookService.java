@@ -78,7 +78,7 @@ public class WebHookService {
         Event event = jacksonJson.unmarshal(Event.class, reader);
         ;
         switch (eventName) {
-            case BuildEvent.X_GITLAB_EVENT:
+            case BuildEvent.JOB_HOOK_X_GITLAB_EVENT:
                 break;
             case IssueEvent.X_GITLAB_EVENT:
                 break;
