@@ -65,7 +65,7 @@ public class GitlabAccountService {
 			//分类处理登录验证
 			GitLabApi gitlabApi = null;
 			if(param.getType()==1){
-				gitlabApi=new GitLabApi(ApiVersion.V3,param.getUrl(),param.getToken());
+				gitlabApi=new GitLabApi(ApiVersion.V4,param.getUrl(),param.getToken());
 				account.setSession(gitlabApi.getSession());
 				account.setStats(1);
 				try {
@@ -77,7 +77,7 @@ public class GitlabAccountService {
 				}
 			}else if(param.getType()==0){
 				try {
-					gitlabApi =GitLabApi.login(ApiVersion.V3, param.getUrl(), param.getUser(), param.getPwd());
+					gitlabApi =GitLabApi.login(ApiVersion.V4, param.getUrl(), param.getUser(), param.getPwd());
 					account.setSession(gitlabApi.getSession());
 					account.setStats(1);
 					User user= gitlabApi.getUserApi().getCurrentUser();
