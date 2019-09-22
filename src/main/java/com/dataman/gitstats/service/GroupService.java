@@ -245,7 +245,7 @@ public class GroupService {
 	}
 
 	public void deleteGroupStats(String id) {
-		groupStatsRepository.delete(id);
+		groupStatsRepository.deleteById(id);
 		projectRepository.deleteByGroupId(id);
 		projectBranchStatsRepository.deleteByGroupId(id);
 		commitStatsRepository.deleteByGroupId(id);

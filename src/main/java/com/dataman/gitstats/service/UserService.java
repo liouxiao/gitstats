@@ -104,7 +104,7 @@ public class UserService {
     }
 
     public void del(String userId){
-        userRepository.delete(userId);
+        userRepository.deleteById(userId);
     }
 
 

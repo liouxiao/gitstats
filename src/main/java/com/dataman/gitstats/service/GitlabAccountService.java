@@ -28,7 +28,7 @@ public class GitlabAccountService {
 	
 	public int delAccount(String id){
 		int SUCCESS =0;
-		gitlabAccountRepository.delete(id);
+		gitlabAccountRepository.deleteById(id);
 		return SUCCESS;
 	}
 	

@@ -146,7 +146,7 @@ public class ProjectBranchService {
 	}
 
 	public void deleteProjectBranchStats(String id){
-		projectBranchStatsRepository.delete(id);
+		projectBranchStatsRepository.deleteById(id);
 		commitStatsRepository.deleteByBranchId(id);
 	}
 
