@@ -23,7 +23,12 @@ public class GitlabAccountService {
 	
 	
 	public List<GitlabAccount> getAll(){
-		return gitlabAccountRepository.findAll();
+		List<GitlabAccount> accounts = gitlabAccountRepository.findAll();
+		for (GitlabAccount account : accounts) {
+			// delete password info
+			account.setPwd("******");
+		}
+		return accounts;
 	}
 	
 	public int delAccount(String id){

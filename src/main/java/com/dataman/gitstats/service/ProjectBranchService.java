@@ -263,14 +263,14 @@ public class ProjectBranchService {
 	}
 	//	db.getCollection('commitStatsPo').aggregate([
 	//	 {$match:{"proid" : "3ec34ce6b6f64d90afba8009a31a504e","branch" : "dev"}},
-	//	 {$group:{_id:"$authorName",addrow:{$sum:"$addRow"},removerow:{$sum:"$removeRow"},commit:{$sum:1}}}
+	//	 {$group:{_id:"$authorEmail",addrow:{$sum:"$addRow"},removerow:{$sum:"$removeRow"},commit:{$sum:1}}}
 	//	 ,{$sort:{addrow:-1}}
 	//	 ])
 	public List<CommitStatsVo> statsByUser(ProjectBranchStats pbs){
 		List<CommitStatsVo> list=null;
 		Aggregation agg= Aggregation.newAggregation(
 			Aggregation.match(new Criteria("branchId").is(pbs.getId())),
-			Aggregation.group(Fields.fields("$authorName")).sum("$addRow").as("addrow").sum("$removeRow").as("removerow").count().as("commit"),
+			Aggregation.group(Fields.fields("$authorEmail")).sum("$addRow").as("addrow").sum("$removeRow").as("removerow").count().as("commit"),
 			Aggregation.sort(Direction.DESC, "addrow")
 		);
 		AggregationResults<CommitStatsVo> ret=  mongoTemplate.aggregate(agg, CommitStatsPo.class, CommitStatsVo.class);
@@ -306,9 +306,9 @@ public class ProjectBranchService {
 //	db.getCollection('commitStatsPo').aggregate([  
 //	{$match:{"proid" : "0670ed0736be4101aab4d679a997977e","branch" : "develop"}}
 //	,{$project : { day : {$substr: ["$createdAt", 0, 10] },addRow : 1,removeRow:1 ,authorName:1}}
-//	,{$group   : { _id : {authorName: "$authorName",day : "$day"},  addRow : { $sum : "$addRow" } ,removeRow : { $sum : "$removeRow" },commit:{$sum:1}}}   
+//	,{$group   : { _id : {authorName: "$authorEmail",day : "$day"},  addRow : { $sum : "$addRow" } ,removeRow : { $sum : "$removeRow" },commit:{$sum:1}}}   
 //	,{$project : {_id :0, authorName : '$_id.authorName', dayinfo : {day : '$_id.day', addRow:'$addRow',removeRow:'$removeRow',commit:'$commit'}}}
-//	,{$group:{_id:"$authorName", days:{$push:"$dayinfo"}, addrow: {$sum: "$dayinfo.addRow"},removeRow: {$sum: "$dayinfo.removeRow"},commit: {$sum: "$dayinfo.commit"}}}
+//	,{$group:{_id:"$authorEmail", days:{$push:"$dayinfo"}, addrow: {$sum: "$dayinfo.addRow"},removeRow: {$sum: "$dayinfo.removeRow"},commit: {$sum: "$dayinfo.commit"}}}
 //	,{$sort : { addrow : -1 }}
 //	])
 	public List<StatsByUserByDayVo> statsByUserByDay(ProjectBranchStats pbs,String dataformat,MatchOperation match){
@@ -316,7 +316,7 @@ public class ProjectBranchService {
 		Aggregation agg= Aggregation.newAggregation(
 				match,
 				Aggregation.project().and("createdAt").dateAsFormattedString(dataformat).as("day").and("$addRow").as("addRow")
-				.and("$removeRow").as("removeRow").and("$authorName").as("authorName"),
+				.and("$removeRow").as("removeRow").and("$authorEmail").as("authorName"),
 				Aggregation.sort(Direction.DESC, "day"),
 				Aggregation.group(Fields.fields("authorName","day")).sum("addRow").as("addRow").sum("removeRow").as("removeRow")
 					.count().as("commit"),
@@ -337,7 +337,7 @@ public class ProjectBranchService {
 //	db.getCollection('commitStatsPo').aggregate([  
 //	{$match:{"branchId" : "59dad6c94cd6f7d2103db236"}}
 //	,{$project : { day : {$substr: ["$createdAt", 0, 10] },addRow : 1,removeRow:1 ,authorName:1}}
-//	,{$group   : { _id : {authorName: "$authorName",day : "$day"},  addRow : { $sum : "$addRow" } ,removeRow : { $sum : "$removeRow" },commit:{$sum:1}}}   
+//	,{$group   : { _id : {authorName: "$authorEmail",day : "$day"},  addRow : { $sum : "$addRow" } ,removeRow : { $sum : "$removeRow" },commit:{$sum:1}}}   
 //	,{$project : { day : '$_id.day', usersinfo : {user : '$_id.authorName', addRow:'$addRow',removeRow:'$removeRow',commit:'$commit'}}}
 //	,{$group:{_id:"$day", users:{$push:"$usersinfo"}, addrow: {$sum: "$usersinfo.addRow"},removeRow: {$sum: "$usersinfo.removeRow"},commit: {$sum: "$usersinfo.commit"}}}
 //	,{$sort : { _id : -1 }}
@@ -347,7 +347,7 @@ public class ProjectBranchService {
 		Aggregation agg= Aggregation.newAggregation(
 				match,
 				Aggregation.project().and("createdAt").dateAsFormattedString(dataformat).as("day").and("$addRow").as("addRow")
-				.and("$removeRow").as("removeRow").and("$authorName").as("authorName"),
+				.and("$removeRow").as("removeRow").and("$authorEmail").as("authorName"),
 				Aggregation.group(Fields.fields("authorName","day")).sum("addRow").as("addRow").sum("removeRow").as("removeRow")
 					.count().as("commit"),
 				Aggregation.sort(Direction.DESC, "addRow"),
@@ -394,7 +394,7 @@ public class ProjectBranchService {
 	}
 	
 //	db.getCollection('commitStatsPo').aggregate([
-//	    {$group:{_id:'$authorName'}}
+//	    {$group:{_id:'$authorEmail'}}
 //	])
 	public List<CommitStatsVo> proGroupByAuthorName(String id){
 		List<CommitStatsVo> list=null;
